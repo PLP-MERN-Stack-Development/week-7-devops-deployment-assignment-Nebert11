@@ -76,3 +76,70 @@ Your work will be automatically submitted when you push to your GitHub Classroom
 - [Railway Documentation](https://docs.railway.app/)
 - [Vercel Documentation](https://vercel.com/docs)
 - [Netlify Documentation](https://docs.netlify.com/) 
+
+# Deployment Instructions
+
+## Backend Deployment
+
+### Render
+1. Go to https://render.com and create a new Web Service.
+2. Connect your GitHub repo and select the `server` directory as the root.
+3. Set environment variables from `server/.env.example`.
+4. Use the build command: `pnpm install` and start command: `pnpm start`.
+
+### Heroku
+1. Install the Heroku CLI and log in.
+2. In the `server` directory, run:
+   ```sh
+   heroku create your-app-name
+   heroku config:set $(cat .env | xargs)
+   git push heroku main
+   ```
+3. Ensure a `Procfile` exists with `web: node server.js`.
+
+### Railway
+1. Go to https://railway.app and create a new project.
+2. Connect your GitHub repo and set up the backend as a service.
+3. Set environment variables from `server/.env.example`.
+
+## Frontend Deployment
+
+### Vercel
+1. Go to https://vercel.com and import your repo.
+2. Set the project root to `client`.
+3. Set environment variables from `client/.env.example`.
+4. Use the build command: `pnpm run build`.
+
+### Netlify
+1. Go to https://netlify.com and create a new site from Git.
+2. Set the base directory to `client`.
+3. Set environment variables from `client/.env.example`.
+4. Use the build command: `pnpm run build` and publish directory: `dist`.
+
+## Deployed URLs
+- Frontend: <your-frontend-url>
+- Backend API: <your-backend-url>
+
+## Notes
+- Update these URLs after deployment.
+- Ensure all environment variables are set in the deployment dashboard. 
+
+# Monitoring & Maintenance
+
+## Health Check
+- The backend exposes a health check endpoint at `/api/health`.
+- Returns status, MongoDB connection state, uptime, and timestamp.
+- Use this endpoint for uptime monitoring (e.g., with UptimeRobot).
+
+## Error & Performance Monitoring
+- For error tracking, consider integrating [Sentry](https://sentry.io/welcome/) or similar.
+- For server resource monitoring, use your hosting provider's dashboard (Render, Railway, Heroku).
+- For frontend performance, use Vercel/Netlify analytics or browser tools.
+
+## Maintenance Plan
+- Schedule regular dependency updates (monthly or as needed).
+- Plan for database backups (MongoDB Atlas provides automated backups).
+- Document deployment and rollback procedures in this README.
+- Monitor CI/CD pipeline and address failures promptly.
+
+--- 

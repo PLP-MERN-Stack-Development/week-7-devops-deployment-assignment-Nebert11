@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-lint:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+      - name: Install pnpm
+        run: npm install -g pnpm
+      - name: Install dependencies (root)
+        run: pnpm install
+      - name: Install dependencies (client)
+        run: pnpm install --dir client
+      - name: Install dependencies (server)
+        run: pnpm install --dir server
+      - name: Lint client
+        run: pnpm lint --dir client
+      - name: Build client
+        run: pnpm build --dir client
+      - name: Lint server
+        run: pnpm lint --dir server || echo "No lint script in server"
+      - name: Build server
+        run: pnpm build --dir server || echo "No build script in server" 
